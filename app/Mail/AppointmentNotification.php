@@ -38,7 +38,8 @@ class AppointmentNotification extends Mailable
             ->with([
                 'name' => $this->appointment->name,  // Corrected from $this->record to $this->appointment
                 'status' => ucfirst($this->appointment->status),  // Corrected from $this->record to $this->appointment
-                'appointment_datetime' => $this->appointment->appointment_datetime->format('d M Y H:i'),  // Corrected from $this->record to $this->appointment
+                'appointment_datetime' => \Carbon\Carbon::parse($this->appointment->appointment_datetime)->format('d M Y H:i'),
+
                 'messageContent' => $this->messageContent,
             ]);
     }
