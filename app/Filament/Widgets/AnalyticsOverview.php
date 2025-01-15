@@ -16,24 +16,35 @@ class AnalyticsOverview extends BaseWidget
         $weekStart = Carbon::now()->startOfWeek();
         $monthStart = Carbon::now()->startOfMonth();
 
+        // Format appointment_datetime to standard format for comparison (Y-m-d H:i:s)
+        $todayFormatted = $today->format('Y-m-d H:i:s');
+        $weekStartFormatted = $weekStart->format('Y-m-d H:i:s');
+        $weekEndFormatted = $weekStart->endOfWeek()->format('Y-m-d H:i:s');
+        $monthStartFormatted = $monthStart->format('Y-m-d H:i:s');
+        $monthEndFormatted = $monthStart->endOfMonth()->format('Y-m-d H:i:s');
+
+        // Debugging: check the formatted date and time range
+//        dd($weekStartFormatted, $weekEndFormatted);
+
         // Fetch the appointment counts based on 'appointment_datetime'
         $appointmentCount = Appointment::query()->count();  // Total appointments count
-        $appointmentsToday = Appointment::query()->whereDate('appointment_datetime', $today)->count();
+        $appointmentsToday = Appointment::query()
+            ->whereDate('appointment_datetime', $todayFormatted)  // Compare with formatted today
+            ->count();
 
         // Adjust the query for appointments within this week and this month, including the correct time range
         $appointmentsThisWeek = Appointment::query()
             ->whereBetween('appointment_datetime', [
-                $weekStart->startOfDay(),  // Start of the week (00:00:00)
-                $weekStart->endOfWeek()->endOfDay()  // End of the week (23:59:59)
+                $weekStartFormatted,  // Start of the week (formatted)
+                $weekEndFormatted     // End of the week (formatted)
             ])->count();
 
         $appointmentsThisMonth = Appointment::query()
             ->whereBetween('appointment_datetime', [
-                $monthStart->startOfMonth()->startOfDay(), // Start of the month (00:00:00)
-                $monthStart->endOfMonth()->endOfDay() // End of the month (23:59:59)
+                $monthStartFormatted, // Start of the month (formatted)
+                $monthEndFormatted    // End of the month (formatted)
             ])->count();
 
-        // Fetch pending appointments based on status
         $pendingAppointments = Appointment::query()->where('status', 'pending')->count();
 
         // Return data as cards with icons
