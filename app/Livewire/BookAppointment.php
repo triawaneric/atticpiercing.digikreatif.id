@@ -2,9 +2,11 @@
 
 namespace App\Livewire;
 
+use App\Mail\AppointmentNotification;
 use App\Models\Appointment;
 use App\Models\Outlet;
 use App\Models\Product;
+use Illuminate\Support\Facades\Mail;
 use Livewire\Component;
 
 class BookAppointment extends Component
@@ -40,7 +42,7 @@ class BookAppointment extends Component
     {
         $this->validate();
 
-        Appointment::create([
+        $appointment = Appointment::create([
             'name' => $this->name,
             'email' => $this->email,
             'phone' => $this->phone,
@@ -50,6 +52,12 @@ class BookAppointment extends Component
             'product_name' => $this->product_name,
             'status' => Appointment::STATUS_PENDING,
         ]);
+
+
+        $messageContent = "Your appointment has been successfully booked and is currently pending confirmation.";
+
+        // Kirim email notifikasi ke customer
+        Mail::to($this->email)->send(new AppointmentNotification($appointment, $messageContent));
 
         $this->reset();
         session()->flash('success', 'Your appointment has been booked!');

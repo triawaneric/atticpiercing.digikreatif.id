@@ -4,6 +4,7 @@ namespace App\Filament\Resources;
 
 use App\Filament\Resources\AppointmentResource\Pages;
 use App\Filament\Resources\AppointmentResource\RelationManagers;
+use App\Mail\AppointmentNotification;
 use App\Models\Appointment;
 use App\Models\Outlet;
 use App\Models\Product;
@@ -14,6 +15,7 @@ use Filament\Tables;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
+use Illuminate\Support\Facades\Mail;
 
 class AppointmentResource extends Resource
 {
@@ -55,7 +57,6 @@ class AppointmentResource extends Resource
                     ->label('Enter Product Name')
                     ->nullable()
                     ->visible(fn (callable $get) => $get('product_id') === null), // tampilkan jika product_id = null
-
                 Forms\Components\Select::make('status')
                     ->options([
                         'pending' => 'Pending',
@@ -63,7 +64,19 @@ class AppointmentResource extends Resource
                         'canceled' => 'Canceled',
                     ])
                     ->default('pending')
-                    ->required(),
+                    ->required()
+                    ->afterStateUpdated(function ($state, $record) {
+                        if ($record) {
+                            // Kirim email ke pelanggan
+                            $messageContent = match ($state) {
+                                'confirmed' => "Your appointment has been confirmed. Please arrive on time.",
+                                'canceled' => "Unfortunately, your appointment has been canceled. Please contact us for more details.",
+                                default => "Your appointment status has been updated to: " . ucfirst($state) . ".",
+                            };
+
+                            Mail::to($record->email)->send(new AppointmentNotification($record, $messageContent));
+                        }
+                    }),
             ]);
     }
 
