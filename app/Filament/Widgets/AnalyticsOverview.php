@@ -19,9 +19,9 @@ class AnalyticsOverview extends BaseWidget
         // Fetch the appointment counts
         $appointmentCount = Appointment::query()->count();  // Total appointments count
         $appointmentsToday = Appointment::query()->whereDate('created_at', $today)->count();  // Appointments created today
-        $appointmentsThisWeek = Appointment::whereBetween('created_at', [$weekStart, now()])->count();  // Appointments created this week
-        $appointmentsThisMonth = Appointment::whereBetween('created_at', [$monthStart, now()])->count();  // Appointments created this month
-        $pendingAppointments = Appointment::where('status', 'pending')->count();  // Appointments with 'pending' status
+        $appointmentsThisWeek = Appointment::query()->whereBetween('created_at', [$weekStart, now()])->count();  // Appointments created this week
+        $appointmentsThisMonth = Appointment::query()->whereBetween('created_at', [$monthStart, now()])->count();  // Appointments created this month
+        $pendingAppointments = Appointment::query()->where('status', 'pending')->count();  // Appointments with 'pending' status
 
         // Return data as cards with icons
         return [
