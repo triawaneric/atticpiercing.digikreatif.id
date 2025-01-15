@@ -3,7 +3,6 @@
 namespace App\Filament\Widgets;
 
 use App\Models\Booking;
-use App\Models\Order;
 use Filament\Widgets\Widget;
 use Illuminate\Support\Carbon;
 
@@ -18,11 +17,20 @@ class AnalyticsOverview extends Widget
         $monthStart = Carbon::now()->startOfMonth();
 
         return [
+            // Total Bookings
             'bookingCount' => Booking::count(),
-//            'orderCountToday' => Order::whereDate('created_at', $today)->count(),
-//            'orderCountThisWeek' => Order::whereBetween('created_at', [$weekStart, now()])->count(),
-//            'orderCountThisMonth' => Order::whereBetween('created_at', [$monthStart, now()])->count(),
-//            'recentOrders' => Order::latest()->take(5)->get(),
+
+            // Bookings Today
+            'bookingsToday' => Booking::whereDate('created_at', $today)->count(),
+
+            // Bookings This Week
+            'bookingsThisWeek' => Booking::whereBetween('created_at', [$weekStart, now()])->count(),
+
+            // Bookings This Month
+            'bookingsThisMonth' => Booking::whereBetween('created_at', [$monthStart, now()])->count(),
+
+            // Pending Bookings
+            'pendingBookings' => Booking::where('status', 'pending')->count(),
         ];
     }
 }
