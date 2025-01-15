@@ -4,6 +4,7 @@ namespace App\Livewire;
 
 use App\Models\Appointment;
 use App\Models\Outlet;
+use App\Models\Product;
 use Livewire\Component;
 
 class BookAppointment extends Component
