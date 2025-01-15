@@ -16,13 +16,25 @@ class AnalyticsOverview extends BaseWidget
         $weekStart = Carbon::now()->startOfWeek();
         $monthStart = Carbon::now()->startOfMonth();
 
-        // Fetch the appointment counts based on 'appointment_date'
+        // Fetch the appointment counts based on 'appointment_datetime'
         $appointmentCount = Appointment::query()->count();  // Total appointments count
         $appointmentsToday = Appointment::query()->whereDate('appointment_datetime', $today)->count();
-        $appointmentsThisWeek = Appointment::query()->whereBetween('appointment_datetime', [$weekStart, now()])->count();
-        $appointmentsThisMonth = Appointment::query()->whereBetween('appointment_datetime', [$monthStart, now()])->count();
 
-        $pendingAppointments = Appointment::query()->where('status', 'pending')->count();  // Appointments with 'pending' status
+        // Adjust the query for appointments within this week and this month, including the correct time range
+        $appointmentsThisWeek = Appointment::query()
+            ->whereBetween('appointment_datetime', [
+                $weekStart->startOfDay(),  // Start of the week (00:00:00)
+                $weekStart->endOfWeek()->endOfDay()  // End of the week (23:59:59)
+            ])->count();
+
+        $appointmentsThisMonth = Appointment::query()
+            ->whereBetween('appointment_datetime', [
+                $monthStart->startOfMonth()->startOfDay(), // Start of the month (00:00:00)
+                $monthStart->endOfMonth()->endOfDay() // End of the month (23:59:59)
+            ])->count();
+
+        // Fetch pending appointments based on status
+        $pendingAppointments = Appointment::query()->where('status', 'pending')->count();
 
         // Return data as cards with icons
         return [
