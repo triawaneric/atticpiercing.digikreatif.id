@@ -2,7 +2,7 @@
 
 namespace App\Filament\Widgets;
 
-use App\Models\Appointment; // Menggunakan model Appointment
+use App\Models\Appointment;
 use Filament\Widgets\StatsOverviewWidget as BaseWidget;
 use Filament\Widgets\StatsOverviewWidget\Stat;
 use Illuminate\Support\Carbon;
@@ -16,11 +16,11 @@ class AnalyticsOverview extends BaseWidget
         $weekStart = Carbon::now()->startOfWeek();
         $monthStart = Carbon::now()->startOfMonth();
 
-        // Fetch the appointment counts
+        // Fetch the appointment counts based on 'appointment_date'
         $appointmentCount = Appointment::query()->count();  // Total appointments count
-        $appointmentsToday = Appointment::query()->whereDate('created_at', $today)->count();  // Appointments created today
-        $appointmentsThisWeek = Appointment::query()->whereBetween('created_at', [$weekStart, now()])->count();  // Appointments created this week
-        $appointmentsThisMonth = Appointment::query()->whereBetween('created_at', [$monthStart, now()])->count();  // Appointments created this month
+        $appointmentsToday = Appointment::query()->whereDate('appointment_date', $today)->count();  // Appointments booked today
+        $appointmentsThisWeek = Appointment::query()->whereBetween('appointment_date', [$weekStart, now()])->count();  // Appointments booked this week
+        $appointmentsThisMonth = Appointment::query()->whereBetween('appointment_date', [$monthStart, now()])->count();  // Appointments booked this month
         $pendingAppointments = Appointment::query()->where('status', 'pending')->count();  // Appointments with 'pending' status
 
         // Return data as cards with icons
