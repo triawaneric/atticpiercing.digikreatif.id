@@ -16,21 +16,19 @@ class AnalyticsOverview extends Widget
         $weekStart = Carbon::now()->startOfWeek();
         $monthStart = Carbon::now()->startOfMonth();
 
+        // Fetch the booking counts
+        $bookingCount = Booking::query()->count();
+        $bookingsToday = Booking::query()->whereDate('created_at', $today)->count();
+        $bookingsThisWeek = Booking::query()->whereBetween('created_at', [$weekStart, now()])->count();
+        $bookingsThisMonth = Booking::query()->whereBetween('created_at', [$monthStart, now()])->count();
+        $pendingBookings = Booking::query()->where('status', 'pending')->count(); // assuming you have a 'status' column
+
         return [
-            // Total Bookings
-            'bookingCount' => Booking::query()->count(),
-
-            // Bookings Today
-            'bookingsToday' => Booking::query()->whereDate('created_at', $today)->count(),
-
-            // Bookings This Week
-            'bookingsThisWeek' => Booking::query()->whereBetween('created_at', [$weekStart, now()])->count(),
-
-            // Bookings This Month
-            'bookingsThisMonth' => Booking::query()->whereBetween('created_at', [$monthStart, now()])->count(),
-
-            // Pending Bookings
-            'pendingBookings' => Booking::query()->where('status', 'pending')->count(),
+            'bookingCount' => $bookingCount,
+            'bookingsToday' => $bookingsToday,
+            'bookingsThisWeek' => $bookingsThisWeek,
+            'bookingsThisMonth' => $bookingsThisMonth,
+            'pendingBookings' => $pendingBookings,
         ];
     }
 }
