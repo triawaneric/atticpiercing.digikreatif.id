@@ -42,7 +42,7 @@ class AdminPanelProvider extends PanelProvider
             ->widgets([
 //                Widgets\AccountWidget::class,
 
-                AnalyticsOverview::class,
+//                AnalyticsOverview::class,
             ])
             ->middleware([
                 EncryptCookies::class,
