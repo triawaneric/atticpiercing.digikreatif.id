@@ -18,19 +18,19 @@ class AnalyticsOverview extends Widget
 
         return [
             // Total Bookings
-            'bookingCount' => Booking::count(),
+            'bookingCount' => Booking::query()->count(),
 
             // Bookings Today
-            'bookingsToday' => Booking::whereDate('created_at', $today)->count(),
+            'bookingsToday' => Booking::query()->whereDate('created_at', $today)->count(),
 
             // Bookings This Week
-            'bookingsThisWeek' => Booking::whereBetween('created_at', [$weekStart, now()])->count(),
+            'bookingsThisWeek' => Booking::query()->whereBetween('created_at', [$weekStart, now()])->count(),
 
             // Bookings This Month
-            'bookingsThisMonth' => Booking::whereBetween('created_at', [$monthStart, now()])->count(),
+            'bookingsThisMonth' => Booking::query()->whereBetween('created_at', [$monthStart, now()])->count(),
 
             // Pending Bookings
-            'pendingBookings' => Booking::where('status', 'pending')->count(),
+            'pendingBookings' => Booking::query()->where('status', 'pending')->count(),
         ];
     }
 }
