@@ -34,6 +34,12 @@ class AppointmentNotification extends Mailable
     public function build()
     {
         return $this->subject('Appointment Notification')
-            ->view('emails.appointment-notification');
+            ->view('emails.appointment-notification')
+            ->with([
+                'name' => $this->appointment->name,  // Corrected from $this->record to $this->appointment
+                'status' => ucfirst($this->appointment->status),  // Corrected from $this->record to $this->appointment
+                'appointment_datetime' => $this->appointment->appointment_datetime->format('d M Y H:i'),  // Corrected from $this->record to $this->appointment
+                'messageContent' => $this->messageContent,
+            ]);
     }
 }

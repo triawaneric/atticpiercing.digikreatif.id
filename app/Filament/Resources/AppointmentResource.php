@@ -67,9 +67,9 @@ class AppointmentResource extends Resource
                     ->required()
                     ->afterStateUpdated(function ($state, $record) {
                         if ($record) {
-
-                            // Refresh record untuk memastikan data terbaru
+                            // Pastikan data model diperbarui
                             $record->refresh();
+
                             // Kirim email ke pelanggan
                             $messageContent = match ($state) {
                                 'confirmed' => "Your appointment has been confirmed. Please arrive on time.",
@@ -80,7 +80,8 @@ class AppointmentResource extends Resource
                             Mail::to($record->email)->send(new AppointmentNotification($record, $messageContent));
                         }
                     }),
-            ]);
+
+        ]);
     }
 
     public static function table(Table $table): Table
