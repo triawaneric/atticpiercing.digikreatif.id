@@ -3,7 +3,10 @@
 namespace App\Filament\Widgets;
 
 
+use App\Models\Appointment;
 use Saade\FilamentFullCalendar\Widgets\FullCalendarWidget;
+use Saade\FilamentFullCalendar\Data\EventData;
+use App\Filament\Resources\AppointmentResource;
 
 class CalendarWidget extends FullCalendarWidget
 {
@@ -13,9 +16,21 @@ class CalendarWidget extends FullCalendarWidget
      */
     public function fetchEvents(array $fetchInfo): array
     {
-        // You can use $fetchInfo to filter events by date.
-        // This method should return an array of event-like objects. See: https://github.com/saade/filament-fullcalendar/blob/3.x/#returning-events
-        // You can also return an array of EventData objects. See: https://github.com/saade/filament-fullcalendar/blob/3.x/#the-eventdata-class
-        return [];
+        return Appointment::query()
+            ->where('appointment_datetime', '>=', $fetchInfo['start'])
+            ->where('appointment_datetime', '<=', $fetchInfo['end'])
+            ->get()
+            ->map(
+                fn (Appointment $appointment) => EventData::make()
+                    ->id($appointment->id) // Use the appointment ID
+                    ->title($appointment->name) // Use the appointment's name
+                    ->start($appointment->appointment_datetime) // Use the appointment's datetime
+                    ->end($appointment->appointment_datetime) // Assume the appointment is 1-hour long; adjust if needed
+                    ->url(
+                        url: AppointmentResource::getUrl(name: 'view', parameters: ['record' => $appointment->id]),
+                        shouldOpenUrlInNewTab: false
+                    )
+            )
+            ->toArray();
     }
 }

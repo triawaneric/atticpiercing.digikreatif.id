@@ -44,6 +44,8 @@ class MaterialResource extends Resource
         return $table
             ->columns([
                 //
+                Tables\Columns\TextColumn::make('name')->sortable()->searchable(),
+                Tables\Columns\BooleanColumn::make('is_active')->sortable(),
 
             ])
             ->filters([

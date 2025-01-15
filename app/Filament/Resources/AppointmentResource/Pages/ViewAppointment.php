@@ -2,7 +2,10 @@
 
 namespace App\Filament\Resources\AppointmentResource\Pages;
 
-class ViewAppointment
-{
+use Filament\Resources\Pages\ViewRecord;
+use App\Filament\Resources\AppointmentResource;
 
+class ViewAppointment extends ViewRecord
+{
+    protected static string $resource = AppointmentResource::class;
 }
