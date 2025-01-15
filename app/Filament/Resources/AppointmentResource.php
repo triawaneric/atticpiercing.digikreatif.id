@@ -68,7 +68,8 @@ class AppointmentResource extends Resource
                     ->afterStateUpdated(function ($state, $record) {
                         if ($record) {
                             // Pastikan data model diperbarui
-                            $record->refresh();
+                            $record->status = $state;
+                            $record->save();
 
                             // Kirim email ke pelanggan
                             $messageContent = match ($state) {
