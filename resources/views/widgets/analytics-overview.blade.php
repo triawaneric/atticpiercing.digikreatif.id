@@ -1,27 +1,38 @@
 <div class="grid grid-cols-1 gap-4 md:grid-cols-3">
     <!-- Total Bookings -->
-    <div class="p-4 bg-white rounded-lg shadow">
-        <h3 class="text-lg font-semibold">Total Bookings</h3>
-        <p class="mt-2 text-2xl font-bold text-gray-700">{{ $totalBookings }}</p>
+    <div class="p-6 bg-white rounded-lg shadow-xl hover:shadow-2xl transition-all duration-300">
+        <div class="flex items-center space-x-3">
+            <svg xmlns="http://www.w3.org/2000/svg" class="w-8 h-8 text-blue-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 4a2 2 0 012-2h14a2 2 0 012 2v16a2 2 0 01-2 2H5a2 2 0 01-2-2V4z" />
+            </svg>
+            <h3 class="text-lg font-semibold text-gray-800">Total Bookings</h3>
+        </div>
+        <p class="mt-2 text-4xl font-bold text-gray-700">{{ $bookingCount }}</p>
     </div>
 
     <!-- Booking Analytics -->
-    <div class="p-4 bg-white rounded-lg shadow">
-        <h3 class="text-lg font-semibold">Booking Analytics</h3>
-        <ul class="mt-2 space-y-1 text-gray-700">
-            <li>Today: <span class="font-bold">{{ $bookingsToday }}</span></li>
-            <li>This Week: <span class="font-bold">{{ $bookingsThisWeek }}</span></li>
-            <li>This Month: <span class="font-bold">{{ $bookingsThisMonth }}</span></li>
+    <div class="p-6 bg-white rounded-lg shadow-xl hover:shadow-2xl transition-all duration-300">
+        <div class="flex items-center space-x-3">
+            <svg xmlns="http://www.w3.org/2000/svg" class="w-8 h-8 text-green-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 3l14 9-14 9V3z" />
+            </svg>
+            <h3 class="text-lg font-semibold text-gray-800">Booking Analytics</h3>
+        </div>
+        <ul class="mt-2 space-y-2 text-gray-700">
+            <li>Today: <span class="font-bold text-gray-900">{{ $bookingsToday }}</span></li>
+            <li>This Week: <span class="font-bold text-gray-900">{{ $bookingsThisWeek }}</span></li>
+            <li>This Month: <span class="font-bold text-gray-900">{{ $bookingsThisMonth }}</span></li>
         </ul>
     </div>
 
-    <!-- Pending Approvals -->
-    <div class="p-4 bg-white rounded-lg shadow">
-        <h3 class="text-lg font-semibold">Bookings Pending Approval</h3>
-        <ul class="mt-2 space-y-1 text-gray-700">
-            @foreach ($pendingBookings as $booking)
-                <li>{{ $booking->id }} - {{ $booking->customer_name }} ({{ $booking->created_at->format('d M Y, H:i') }})</li>
-            @endforeach
-        </ul>
+    <!-- Pending Bookings -->
+    <div class="p-6 bg-white rounded-lg shadow-xl hover:shadow-2xl transition-all duration-300">
+        <div class="flex items-center space-x-3">
+            <svg xmlns="http://www.w3.org/2000/svg" class="w-8 h-8 text-yellow-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 3l14 9-14 9V3z" />
+            </svg>
+            <h3 class="text-lg font-semibold text-gray-800">Bookings Pending Approval</h3>
+        </div>
+        <p class="mt-2 text-4xl font-bold text-gray-700">{{ $pendingBookings }}</p>
     </div>
 </div>
