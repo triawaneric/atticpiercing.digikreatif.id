@@ -67,6 +67,9 @@ class AppointmentResource extends Resource
                     ->required()
                     ->afterStateUpdated(function ($state, $record) {
                         if ($record) {
+
+                            // Refresh record untuk memastikan data terbaru
+                            $record->refresh();
                             // Kirim email ke pelanggan
                             $messageContent = match ($state) {
                                 'confirmed' => "Your appointment has been confirmed. Please arrive on time.",
